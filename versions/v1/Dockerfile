@@ -6,10 +6,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 RUN addgroup -S app && adduser -S -G app -u 10001 app
+RUN mkdir -p /app/instance && chown -R app:app /app/instance
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir --no-compile -r requirements.txt
-COPY --chown=app:app versions/v1/app.py /app/app.py
+COPY --chown=app:app versions/v1/ /app/
 
 USER 10001:100
 EXPOSE 5000

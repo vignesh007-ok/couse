@@ -18,12 +18,16 @@ spec:
         runAsNonRoot: true
         runAsUser: 10001
         runAsGroup: 100
+        fsGroup: 100
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: movie-app
           image: vigneshvicky1852007/movie-app:v1
           imagePullPolicy: IfNotPresent
+          env:
+            - name: DATABASE
+              value: /app/instance/movies.sqlite3
           ports:
             - name: http
               containerPort: 5000
@@ -55,8 +59,12 @@ spec:
           volumeMounts:
             - name: tmp
               mountPath: /tmp
+            - name: movie-data
+              mountPath: /app/instance
       volumes:
         - name: tmp
           emptyDir:
             medium: Memory
             sizeLimit: 16Mi
+        - name: movie-data
+          emptyDir: {}

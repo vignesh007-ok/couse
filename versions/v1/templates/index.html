@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10131b">
+  <title>My Movie Shelf — {{ version }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('index') }}" aria-label="My Movie Shelf home">
+      <span class="brand-icon" aria-hidden="true">▶</span>
+      <span>reel<span class="brand-accent">shelf</span></span>
+    </a>
+    <span class="version-pill">{{ version }} · The Classics</span>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-line"></span> YOUR PERSONAL CINEMA</p>
+        <h1>Every great story<br>has a <span>place here.</span></h1>
+        <p class="hero-description">Build your own little corner of cinema. Save the films you love, the ones you want to see, and everything in between.</p>
+        <a class="primary-button hero-button" href="#add-movie">
+          <span aria-hidden="true">＋</span> Add a movie
+        </a>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="poster poster-back"><span>THE<br>ART OF<br>STORY</span></div>
+        <div class="poster poster-front"><span class="poster-star">✳</span><span>GOOD<br>FILMS,<br>GOOD<br>FEELINGS.</span><small>NO. 001 — FOREVER</small></div>
+        <span class="hero-spark spark-one">✳</span>
+        <span class="hero-spark spark-two">✴</span>
+      </div>
+    </section>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack" aria-live="polite">
+          {% for category, message in messages %}
+            <p class="flash flash-{{ category }}">{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <section class="collection-section" aria-labelledby="collection-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span> THE COLLECTION</p>
+          <h2 id="collection-title">Your movie shelf</h2>
+        </div>
+        <span class="movie-count">{{ movies|length }} <span>{{ "film" if movies|length == 1 else "films" }}</span></span>
+      </div>
+
+      {% if movies %}
+        <div class="movie-grid">
+          {% for movie in movies %}
+            <article class="movie-card">
+              <div class="movie-card-top">
+                <span class="genre-tag">{{ movie["genre"] }}</span>
+                <span class="movie-year">{{ movie["release_year"] }}</span>
+              </div>
+              <h3>{{ movie["title"] }}</h3>
+              <p class="movie-description">{{ movie["description"] }}</p>
+              <form method="post" action="{{ url_for('delete_movie', movie_id=movie['id']) }}" class="delete-form" data-confirm-delete>
+                <button class="delete-button" type="submit" aria-label="Remove {{ movie['title'] }}">Remove <span aria-hidden="true">×</span></button>
+              </form>
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <span class="empty-icon" aria-hidden="true">✳</span>
+          <h3>Your shelf is waiting.</h3>
+          <p>Add the first movie that made you feel something.</p>
+          <a class="text-link" href="#add-movie">Add your first movie <span aria-hidden="true">→</span></a>
+        </div>
+      {% endif %}
+    </section>
+
+    <section class="add-section" id="add-movie" aria-labelledby="add-title">
+      <div class="form-intro">
+        <p class="eyebrow"><span class="eyebrow-line"></span> MAKE IT YOURS</p>
+        <h2 id="add-title">Add to the<br><span>collection.</span></h2>
+        <p>One film at a time, your shelf starts to tell your story.</p>
+        <div class="student-card">
+          <span class="student-mark" aria-hidden="true">V</span>
+          <span><strong>VIGNESH.E</strong><small>24MIS0559 · DevOps Project</small></span>
+        </div>
+      </div>
+
+      <form class="movie-form" method="post" action="{{ url_for('add_movie') }}">
+        <div class="field">
+          <label for="title">Movie title</label>
+          <input id="title" name="title" type="text" maxlength="120" placeholder="e.g. The Grand Budapest Hotel" required>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="genre">Genre</label>
+            <input id="genre" name="genre" type="text" maxlength="60" placeholder="e.g. Comedy" required>
+          </div>
+          <div class="field">
+            <label for="release_year">Release year</label>
+            <input id="release_year" name="release_year" type="number" min="1888" max="2200" placeholder="e.g. 2014" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="description">A little about it</label>
+          <textarea id="description" name="description" rows="4" maxlength="1000" placeholder="What makes this one worth remembering?" required></textarea>
+          <span class="field-hint"><span id="description-count">0</span>/1000 characters</span>
+        </div>
+        <button class="primary-button submit-button" type="submit">Save to my shelf <span aria-hidden="true">↗</span></button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a class="brand footer-brand" href="{{ url_for('index') }}"><span class="brand-icon" aria-hidden="true">▶</span><span>reel<span class="brand-accent">shelf</span></span></a>
+    <p>A little shelf for a lot of stories. <span>Made for movie lovers.</span></p>
+    <span class="footer-version">{{ version }} · VIGNESH.E</span>
+  </footer>
+</body>
+</html>
