@@ -1,0 +1,114 @@
+@import url("/assets/base.css");
+
+.collection-filters {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(150px, .42fr) auto;
+  gap: 10px;
+  align-items: center;
+  margin: 0 0 20px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.search-field,
+.genre-filter {
+  display: flex;
+  min-width: 0;
+  min-height: 42px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 11px;
+  border: 1px solid #303440;
+  border-radius: 5px;
+  background: #11141c;
+}
+
+.search-icon {
+  color: var(--accent);
+  font-size: 19px;
+}
+
+.search-field input,
+.genre-filter select {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+}
+
+.search-field input::placeholder {
+  color: #777984;
+}
+
+.genre-filter select {
+  cursor: pointer;
+}
+
+.genre-filter option {
+  background: var(--surface);
+}
+
+.filter-label {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.filter-button {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 5px;
+  background: var(--accent);
+  color: #17131a;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.filter-button span {
+  margin-left: 5px;
+}
+
+.filter-button:hover {
+  background: var(--accent-soft);
+}
+
+.clear-filters {
+  grid-column: 1 / -1;
+  justify-self: end;
+  color: var(--accent);
+  font-size: 10px;
+}
+
+@media (max-width: 620px) {
+  .collection-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .search-field {
+    grid-column: 1 / -1;
+  }
+
+  .filter-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .collection-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .search-field {
+    grid-column: auto;
+  }
+}
